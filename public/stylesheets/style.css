@@ -1,0 +1,156 @@
+body {
+  padding: 50px;
+  font: 14px Helvetica, Arial, sans-serif;
+  background-image: url("/images/windows-bg.jpg"); }
+
+ul {
+  list-style: none; }
+
+.desktop {
+  min-height: 100vh; }
+
+.li-minimize {
+  background-color: #0000ff; }
+
+.li-close {
+  background-color: #ff0000; }
+
+.user-name-sect {
+  margin: 5% auto;
+  background-color: #bfbfbf;
+  max-width: 350px;
+  border: 2px solid blue; }
+
+.login-window {
+  min-height: 400px; }
+  .login-window .login-top-bar {
+    min-height: 25px;
+    background-color: blue; }
+    .login-window .login-top-bar ul li {
+      display: inline-block;
+      border: 1px solid #fff;
+      padding: 0px 3px;
+      margin: 0 2px;
+      color: #fff; }
+  .login-window .login-inner {
+    margin: 5%; }
+    .login-window .login-inner .login-inner-head {
+      background-color: #020092;
+      color: #fff; }
+
+.user-name-form .user-name-submit-btn {
+  color: #333;
+  background-image: url("/images/aim-logo.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 50px;
+  padding-top: 30px;
+  margin-bottom: 10px;
+  background-color: transparent;
+  border: 0px;
+  float: right; }
+
+#buddyChatRow {
+  display: none; }
+
+.chat-box-sect {
+  background-color: #bfbfbf;
+  border: 2px solid #0000ff;
+  padding: 0; }
+
+.chat-box-window .chat-box-top-bar {
+  min-height: 25px;
+  background-color: #0000ff;
+  width: 100%; }
+  .chat-box-window .chat-box-top-bar ul li {
+    display: inline-block;
+    border: 1px solid white;
+    padding: 0px 3px;
+    margin: 0 2px;
+    background-color: #ff0000;
+    color: #fff; }
+
+.chat-box {
+  height: 250px;
+  background-color: #fff;
+  width: 96%;
+  margin: 5% auto;
+  border: 1px solid #ddd;
+  border-top: solid 2px #333;
+  border-left: solid 2px #333; }
+  .chat-box .chat-ul {
+    width: 100%;
+    height: 250px;
+    overflow: scroll; }
+    .chat-box .chat-ul span.username-span {
+      font-weight: bold; }
+
+.message-area {
+  margin: 3% 2%; }
+  .message-area .message-textarea {
+    width: 100%;
+    height: 60px;
+    border: 1px solid #ddd;
+    border-top: solid 2px #333;
+    border-left: solid 2px #333;
+    resize: none; }
+  .message-area .submit-message-btn {
+    color: #333;
+    width: 15%;
+    float: right;
+    margin-bottom: 2%;
+    background-image: url("/images/aim-logo.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 50px;
+    padding-top: 30px;
+    height: 50px;
+    background-color: transparent;
+    border: 0px; }
+
+.buddy-list-box-sect {
+  margin-top: 20%;
+  background-color: #bfbfbf;
+  border: 2px solid #0000ff;
+  padding: 0; }
+  @media (min-width: 768px) {
+    .buddy-list-box-sect {
+      margin-top: 0; } }
+
+.buddy-window {
+  min-height: 400px; }
+  .buddy-window .buddy-top-bar {
+    min-height: 25px;
+    background-color: #0000ff;
+    width: 100%; }
+    .buddy-window .buddy-top-bar ul li {
+      display: inline-block;
+      border: 1px solid white;
+      padding: 0px 3px;
+      margin: 0 2px;
+      background-color: #ff0000;
+      color: #fff; }
+  .buddy-window .buddy-header {
+    background-color: #020092;
+    margin: 5%;
+    color: #fff; }
+
+.buddy-container {
+  background-color: #bfbfbf;
+  width: 90%;
+  margin: 0 auto; }
+  .buddy-container .nav-tabs li a {
+    background-color: #bfbfbf;
+    border-right: 1px solid #333; }
+  .buddy-container .tab-content {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-right: 1px solid #333; }
+    .buddy-container .tab-content .tab-pane {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-top: 2px solid #333;
+      border-left: 2px solid #333;
+      background-color: #fff; }
+
+/*# sourceMappingURL=style.css.map */

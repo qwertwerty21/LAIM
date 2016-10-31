@@ -1,0 +1,68 @@
+extends layout
+
+block content
+	div.container.desktop
+		div#userNameRow.row
+			section.user-name-sect.draggable
+				div.login-window.clearfix
+					div.login-top-bar
+						ul.pull-right
+							li.li-minimize
+								i.fa.fa-window-minimize
+							li.li-close
+								i.fa.fa-close
+					div.login-inner
+						div.login-inner-head.text-center
+							img.img-responsive(src="/images/aim-logo.png", alt="Laim Logo")
+							h1 Lackluster AIM
+						form#userNameForm.user-name-form
+							div.form-group
+								label(for="laimUserName") LAIM ScreenName
+								input#laimUserName.form-control(type="text" maxlength="15" autofocus)
+								br
+								input.btn.btn-primary.user-name-submit-btn(type="submit" value="Sign In")
+		div#buddyChatRow.row
+			section.chat-box-sect.col-sm-7.col-sm-push-5.draggable
+				div.chat-box-window.clearfix
+					div.chat-box-top-bar
+						ul.pull-right
+							li.li-minimize
+								i.fa.fa-window-minimize
+							li.li-close
+								i.fa.fa-close
+					div.chat-box
+						ul#chatUl.chat-ul
+					form#messageForm
+						div.form-group.message-area
+							textarea#message.form-control.message-textarea
+							br
+							input#submitMsgBtn.btn.btn-primary.submit-message-btn(type="submit" value="Send")
+			section.buddy-list-box-sect.col-sm-3.col-sm-pull-7.draggable
+				div.buddy-window.clearfix
+					div.buddy-top-bar
+						ul.pull-right
+							li.li-minimize
+								i.fa.fa-window-minimize
+							li.li-close
+								i.fa.fa-close
+					div.buddy-header.text-center
+						img.img-responsive(src="/images/aim-logo.png", alt="Laim Logo")
+						h3 Lackluster AIM
+					div.my-acc-container.text-center
+						h4 My LAIM ScreenName
+						h5#myUserName
+					hr
+					div.buddy-container
+						ul.nav.nav-tabs
+							li.active
+								a(href="#1a" data-toggle="tab") Online
+						div.tab-content.clearfix
+							div#1a.tab-pane.active
+								h5 #[i.fa.fa-caret-down] Buddies
+								ul#buddyUl
+	
+	script(src='https://code.jquery.com/jquery-3.1.1.min.js')
+	script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+	script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+	script(src="/socket.io/socket.io.js")
+	script(src="/javascripts/main.js")
