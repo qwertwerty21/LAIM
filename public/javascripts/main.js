@@ -164,6 +164,7 @@ $(document).ready(function() {
 		}
 
 		$chatUl.append($chatListItem);
+		$chatUl.scrollTop($chatUl[0].scrollHeight);
 		$message.focus();
 	});
 
