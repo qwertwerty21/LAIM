@@ -10,6 +10,7 @@ $(document).ready(function() {
 	var $messageForm = $('#messageForm');
 	var $message = $('#message');
 	var $chatUl = $('#chatUl'); 
+	var $chatTypeStatus = $('#chatTypeStatus');
 	var buddyArriveSFX = new Audio('/sounds/buddyArrive.mp3');
 	var buddyDepartSFX = new Audio('/sounds/buddyDepart.mp3');
 	var receiveImSFX = new Audio('/sounds/receiveIm.mp3');
@@ -110,10 +111,18 @@ $(document).ready(function() {
 		
 	})
 
+	$message.keydown(function(event) {
+		socket.emit('user typing', {
+			username: $laimUserName.val()
+		});
+	});
+
 	$message.keyup(function(event){
+		socket.emit('noone typing');
 	    if(event.keyCode == 13){
 	        $("#submitMsgBtn").click();
 	    }
+
 	});
 
 	$messageForm.submit( function(e){
@@ -127,6 +136,11 @@ $(document).ready(function() {
 	})
 
 	function postBuddyArrDpartNotif( sn , string ){
+		
+		if(!sn){
+			sn = "Anon";
+		}
+
 		var $chatListItem = $('<li>', {
 			"class": "notification-li"
 		}).text(sn + ' has ' + string + ' the room.');
@@ -141,6 +155,16 @@ $(document).ready(function() {
 	socket.on('buddy departs', function( screenname ){
 		buddyDepartSFX.play();
 		postBuddyArrDpartNotif(screenname, 'left');
+	});
+
+	socket.on('update typing status', function(screenname){
+		if(screenname){
+			$chatTypeStatus.text( screenname + ' is typing...');
+		}
+		else{
+			$chatTypeStatus.text("   ");
+		}
+		
 	});
 
 	socket.on('new message', function(data){

@@ -78,9 +78,14 @@ app.io.on('connection', function(socket){
   //DISCONNECT
   socket.on('disconnect', function(data){
     app.io.emit('buddy departs', socket.username);
-    socketUsers.splice(socketUsers.indexOf(socket.username), 1);
-    updateUserNames();
+    
+    if(socketUsers.indexOf(socket.username) !== -1){
+      socketUsers.splice(socketUsers.indexOf(socket.username), 1);
+    }
+    
     socketConnections.splice( socketConnections.indexOf(socket), 1 )
+    updateUserNames();
+    
     console.log(' a user disconnected. total users %s', socketConnections.length);
   });
   //SET USERNAME
@@ -90,6 +95,14 @@ app.io.on('connection', function(socket){
     socketUsers.push(socket.username);
     app.io.emit('buddy arrives', socket.username);
     updateUserNames();
+  });
+  //USER IS TYPING 
+  socket.on('user typing', function(data){
+    app.io.emit('update typing status', socket.username);
+  });
+  //NOONE IS TYPING
+  socket.on('noone typing', function(){
+    app.io.emit('update typing status');
   });
   //SEND MESSAGE
   socket.on('send message', function(data){
