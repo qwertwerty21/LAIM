@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -22,7 +21,6 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -104,6 +102,7 @@ app.io.on('connection', function(socket){
   socket.on('noone typing', function(){
     app.io.emit('update typing status');
   });
+
   //SEND MESSAGE
   socket.on('send message', function(data){
     app.io.emit('new message', {username: socket.username, msg: data.msg} );

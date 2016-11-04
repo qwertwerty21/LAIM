@@ -9,17 +9,70 @@ $(document).ready(function() {
 	var $buddyUl = $('#buddyUl');
 	var $messageForm = $('#messageForm');
 	var $message = $('#message');
+	var $angstModeBtn = $('#angstModeBtn');
+	var $submitMessageBtn = $("#submitMsgBtn");
 	var $chatUl = $('#chatUl'); 
 	var $chatTypeStatus = $('#chatTypeStatus');
 	var buddyArriveSFX = new Audio('/sounds/buddyArrive.mp3');
 	var buddyDepartSFX = new Audio('/sounds/buddyDepart.mp3');
 	var receiveImSFX = new Audio('/sounds/receiveIm.mp3');
 	var sendImSFX = new Audio('/sounds/sendIm.mp3');
-
+	var angsty = false;
+	var Typer;
 
 	$(".draggable").draggable({
 		scroll: false
 	});
+
+	function setTyper (){
+	return	{
+				text: null,
+				index:0, // current cursor position
+				speed:5, // speed of the Typer
+
+				turnOff: function(){
+					Typer = null;
+				},
+
+				content:function(){
+					return $message.html();// get console content
+				},
+
+				write:function(str){// append to console content
+					$message.append(str);
+					return false;
+				},
+
+				addText:function(key){//Main function to add the code
+					if(this.text){ // otherway if text is loaded
+						var cont=this.content(); // get the console content
+						if(key.keyCode!=8){ // if key is not backspace
+							if(this.index >= this.text.length ){
+								$submitMessageBtn.click();
+								this.index = 0;
+							}
+							this.index+=this.speed;	// add to the index the speed
+						}else{
+							if(this.index>0) // else if index is not less than 0
+								this.index-=this.speed;//	remove speed for deleting text
+						}
+						var text=this.text.substring(0,this.index);// parse the text for stripping html enities
+						var rtn= new RegExp("\n", "g"); // newline regex
+			
+						$message.val(text.replace(rtn," "));// replace newline chars with br, tabs with 4 space and blanks with an html blank
+						 // scroll to make sure bottom is always visible
+						$message.scrollTop(9999);
+
+					}
+					if ( key.preventDefault && key.keyCode != 122 ) { // prevent F11(fullscreen) from being blocked
+						key.preventDefault()
+					};
+					if(key.keyCode != 122){ // otherway prevent keys default behavior
+						key.returnValue = false;
+					}
+				},
+		};
+	}
 
 	function sendFunction(){
 		console.log( $message.val() );
@@ -28,6 +81,10 @@ $(document).ready(function() {
 			username: $laimUserName.val(),
 			msg: $message.val()
 		});
+		if(Typer){
+			getEmoLyrics();
+			Typer.index = 0;
+		}
 		$message.val('');
 	}
 
@@ -100,6 +157,49 @@ $(document).ready(function() {
 		$laimUserName.val( moddedLaimUserName );
 	}
 
+	function getLyricsUrl(){
+		var artistSongTitleArray = [
+			{artist: 'Blink 182', title: 'All The Small Things'},
+			{artist: 'Green Day', title: 'Boulevard Of Broken Dreams'},
+			{artist: 'Linkin Park', title: 'Numb'},
+			{artist: 'Paramore', title: 'Misery Business'},
+			{artist: 'AFI', title: 'Miss Murder'},
+			{artist: 'Evanescence', title: 'Wake Me Up Inside'},
+			{artist: 'Panic At The Disco', title: 'I Write Sins Not Tragedies'},
+			{artist: 'My Chemical Romance', title: 'Welcome To The Black Parade'},
+			{artist: 'Drowning Pool', title: 'Bodies'},
+			{artist: 'Avenged Sevenfold', title: 'Bat Country'},
+			{artist: 'The Red Jumpsuit Apparatus', title: 'Face Down'},
+			{artist: 'Rise Against', title: 'Prayer Of The Refugee'},
+			{artist: 'Boys Like Girls', title: 'Thunder'}
+		];
+		var urlBase = "https://makeitpersonal.co/lyrics?";
+		var song = artistSongTitleArray[ getRandomNum(artistSongTitleArray.length) ];
+		var artist = 'artist=' + song.artist;
+		var title = 'title=' + song.title;
+		return urlBase + artist + "&" + title;
+
+	}
+
+	function initTyper(){
+		Typer = setTyper();
+	}
+
+	function getEmoLyrics(){
+		var url = getLyricsUrl()
+		var lyrics = $.ajax({
+			async: false,
+			dataType: 'text',
+			url: url,
+		});
+		lyrics.done(function( result ){
+			Typer.text = result;
+			console.log(result)
+		});
+
+	}
+	//Add button to jade for angst mode, on $message keydown--if angst mode on--call get emo lyric--init Typer
+
 	$userNameForm.submit( function(e){
 		
 		e.preventDefault();
@@ -109,9 +209,24 @@ $(document).ready(function() {
 			setUserName();
 		}
 		
-	})
+	});
+
+	$angstModeBtn.on('click', function(){
+		angsty ? angsty = false : angsty = true;
+		console.log(angsty);
+		if(angsty){
+			initTyper();
+			getEmoLyrics();
+		}
+		else{
+			Typer.turnOff();
+		}
+	});
 
 	$message.keydown(function(event) {
+		if(angsty === true){
+			Typer.addText(event);
+		}
 		socket.emit('user typing', {
 			username: $laimUserName.val()
 		});
@@ -120,7 +235,7 @@ $(document).ready(function() {
 	$message.keyup(function(event){
 		socket.emit('noone typing');
 	    if(event.keyCode == 13){
-	        $("#submitMsgBtn").click();
+	        $submitMessageBtn.click();
 	    }
 
 	});
