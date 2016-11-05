@@ -189,6 +189,7 @@ $(document).ready(function() {
 	function getEmoLyrics(){
 		var url = getLyricsUrl()
 		var lyrics = $.ajax({
+			async: false,
 			crossDomain: true,
 			dataType: 'text',
 			url: url
