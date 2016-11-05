@@ -3,7 +3,7 @@ extends layout
 block content
 	div.container.desktop
 		div#userNameRow.row
-			section.user-name-sect.draggable
+			section.user-name-sect
 				div.login-window.clearfix
 					div.login-top-bar
 						ul.pull-right
@@ -24,7 +24,7 @@ block content
 		div#buddyChatRow.row
 			section.chat-box-sect.col-sm-7.col-sm-push-5.draggable
 				div.chat-box-window.clearfix
-					div.chat-box-top-bar
+					div.chat-box-top-bar.top-bar-handle
 						ul.pull-right
 							li.li-minimize
 								i.fa.fa-window-minimize
@@ -42,7 +42,7 @@ block content
 							input#submitMsgBtn.btn.btn-primary.submit-message-btn(type="submit" value="Send")
 			section.buddy-list-box-sect.col-sm-3.col-sm-pull-7.draggable
 				div.buddy-window.clearfix
-					div.buddy-top-bar
+					div.buddy-top-bar.top-bar-handle
 						ul.pull-right
 							li.li-minimize
 								i.fa.fa-window-minimize

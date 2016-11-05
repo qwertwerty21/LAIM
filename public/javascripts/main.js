@@ -19,10 +19,28 @@ $(document).ready(function() {
 	var sendImSFX = new Audio('/sounds/sendIm.mp3');
 	var angsty = false;
 	var Typer;
+	var lyricsCacheArr = ['I walk a lonely road The only one that I have ever known Don\'t know where it goes, But it\'s home to me and I walk alone I walk this empty street On the Boulevard of Broken Dreams Where the city sleeps And I\'m the only one and I walk alone I walk alone I walk alone I walk alone I walk a- My shadow\'s the only one that walks beside me My shallow heart\'s the only thing that\'s beating Sometimes I wish someone out there will find me \'Til then I walk alone Ah-ah, ah-ah, ah-ah, aah-ah Ah-ah, ah-ah, ah-ah I\'m walking down the line That divides me somewhere in my mind On the border line Of the edge and where I walk alone Read between the lines What\'s fucked up and everything\'s alright Check my vital signs I know I\'m still alive and I walk alone I walk alone I walk alone I walk alone, I walk a- My shadow\'s the only one that walks beside me My shallow heart\'s the only thing that\'s beating Sometimes I wish someone out there will find me \'Til then I walk alone Ah-ah, ah-ah, ah-ah, aah-ah Ah-ah, ah-ah I walk alone I walk a- I walk this empty street On the Boulevard of Broken Dreams Where the city sleeps And I\'m the only one and I walk a- My shadow\'s the only one that walks beside me My shallow heart\'s the only thing that\'s beating Sometimes I wish someone out there will find me \'Til then I walk alone'];
+	var artistSongTitleArray = [
+			{artist: 'Blink 182', title: 'All The Small Things'},
+			{artist: 'Linkin Park', title: 'Numb'},
+			{artist: 'Paramore', title: 'Misery Business'},
+			{artist: 'AFI', title: 'Miss Murder'},
+			{artist: 'Evanescence', title: 'Wake Me Up Inside'},
+			{artist: 'Panic At The Disco', title: 'I Write Sins Not Tragedies'},
+			{artist: 'My Chemical Romance', title: 'Welcome To The Black Parade'},
+			{artist: 'Drowning Pool', title: 'Bodies'},
+			{artist: 'Avenged Sevenfold', title: 'Bat Country'},
+			{artist: 'The Red Jumpsuit Apparatus', title: 'Face Down'},
+			{artist: 'Rise Against', title: 'Prayer Of The Refugee'},
+			{artist: 'Boys Like Girls', title: 'Thunder'}
+	];
 
 	$(".draggable").draggable({
+		handle: ".top-bar-handle",
 		scroll: false
 	});
+
+	getEmoLyrics();
 
 	function setTyper (){
 	return	{
@@ -82,7 +100,7 @@ $(document).ready(function() {
 			msg: $message.val()
 		});
 		if(Typer){
-			getEmoLyrics();
+			typeInAngst();
 			Typer.index = 0;
 		}
 		$message.val('');
@@ -157,25 +175,9 @@ $(document).ready(function() {
 		$laimUserName.val( moddedLaimUserName );
 	}
 
-	function getLyricsUrl(){
-		var artistSongTitleArray = [
-			{artist: 'Blink 182', title: 'All The Small Things'},
-			{artist: 'Green Day', title: 'Boulevard Of Broken Dreams'},
-			{artist: 'Linkin Park', title: 'Numb'},
-			{artist: 'Paramore', title: 'Misery Business'},
-			{artist: 'AFI', title: 'Miss Murder'},
-			{artist: 'Evanescence', title: 'Wake Me Up Inside'},
-			{artist: 'Panic At The Disco', title: 'I Write Sins Not Tragedies'},
-			{artist: 'My Chemical Romance', title: 'Welcome To The Black Parade'},
-			{artist: 'Drowning Pool', title: 'Bodies'},
-			{artist: 'Avenged Sevenfold', title: 'Bat Country'},
-			{artist: 'The Red Jumpsuit Apparatus', title: 'Face Down'},
-			{artist: 'Rise Against', title: 'Prayer Of The Refugee'},
-			{artist: 'Boys Like Girls', title: 'Thunder'}
-		];
+	function getLyricsUrl(song){
 		var corsProxyURL = "https://crossorigin.me/"
 		var urlBase = "https://makeitpersonal.co/lyrics?";
-		var song = artistSongTitleArray[ getRandomNum(artistSongTitleArray.length) ];
 		var artist = 'artist=' + song.artist;
 		var title = 'title=' + song.title;
 		return corsProxyURL + urlBase + artist + "&" + title;
@@ -187,17 +189,24 @@ $(document).ready(function() {
 	}
 
 	function getEmoLyrics(){
-		var url = getLyricsUrl()
-		var lyrics = $.ajax({
-			crossDomain: true,
-			dataType: 'text',
-			url: url
-		});
-		lyrics.done(function( result ){
-			Typer.text = result;
-			console.log(result)
-		});
+		
+		for(var i = 0; i < artistSongTitleArray.length; i++){
+			var url = getLyricsUrl(artistSongTitleArray[i]);
+			var lyrics = $.ajax({
+				crossDomain: true,
+				dataType: 'text',
+				url: url
+			});
+			lyrics.done(function( result ){
+				lyricsCacheArr.push(result);
+			});
+		}
+		
 
+	}
+
+	function typeInAngst(){
+		Typer.text = lyricsCacheArr[getRandomNum(lyricsCacheArr.length)];
 	}
 	//Add button to jade for angst mode, on $message keydown--if angst mode on--call get emo lyric--init Typer
 
@@ -217,7 +226,7 @@ $(document).ready(function() {
 		console.log(angsty);
 		if(angsty){
 			initTyper();
-			getEmoLyrics();
+			typeInAngst();
 		}
 		else{
 			Typer.turnOff();
