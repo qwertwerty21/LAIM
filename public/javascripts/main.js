@@ -173,11 +173,12 @@ $(document).ready(function() {
 			{artist: 'Rise Against', title: 'Prayer Of The Refugee'},
 			{artist: 'Boys Like Girls', title: 'Thunder'}
 		];
+		var corsProxyURL = "https://crossorigin.me/"
 		var urlBase = "https://makeitpersonal.co/lyrics?";
 		var song = artistSongTitleArray[ getRandomNum(artistSongTitleArray.length) ];
 		var artist = 'artist=' + song.artist;
 		var title = 'title=' + song.title;
-		return urlBase + artist + "&" + title;
+		return corsProxyURL + urlBase + artist + "&" + title;
 
 	}
 
@@ -188,9 +189,9 @@ $(document).ready(function() {
 	function getEmoLyrics(){
 		var url = getLyricsUrl()
 		var lyrics = $.ajax({
-			async: false,
+			crossDomain: true,
 			dataType: 'text',
-			url: url,
+			url: url
 		});
 		lyrics.done(function( result ){
 			Typer.text = result;

@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
 socketConnections = [];
 socketUsers = [];
 //call socket.io to the app
