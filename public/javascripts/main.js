@@ -206,7 +206,8 @@ $(document).ready(function() {
 	}
 
 	function typeInAngst(){
-		Typer.text = lyricsCacheArr[getRandomNum(lyricsCacheArr.length)];
+		var randSong = getRandomNum(lyricsCacheArr.length);
+		Typer.text = lyricsCacheArr[randSong];
 	}
 	//Add button to jade for angst mode, on $message keydown--if angst mode on--call get emo lyric--init Typer
 
@@ -231,6 +232,7 @@ $(document).ready(function() {
 		else{
 			Typer.turnOff();
 		}
+		$message.focus();
 	});
 
 	$message.keydown(function(event) {
