@@ -226,10 +226,12 @@ $(document).ready(function() {
 		angsty ? angsty = false : angsty = true;
 		console.log(angsty);
 		if(angsty){
+			$angstModeBtn.addClass('angst-mode-on');
 			initTyper();
 			typeInAngst();
 		}
 		else{
+			$angstModeBtn.removeClass('angst-mode-on');
 			Typer.turnOff();
 		}
 		$message.focus();

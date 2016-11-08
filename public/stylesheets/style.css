@@ -113,6 +113,24 @@ ul {
     height: 50px;
     background-color: transparent;
     border: 0px; }
+  .message-area .angst-mode-btn {
+    position: relative;
+    color: #333;
+    height: 50px;
+    padding-top: 30px;
+    margin-bottom: 2%;
+    background-color: transparent;
+    border: 0px;
+    float: left; }
+    .message-area .angst-mode-btn .fa-frown-o {
+      font-size: 30px;
+      position: absolute;
+      top: 0;
+      left: 38%; }
+
+.angst-mode-on {
+  color: #ff0000 !important;
+  text-shadow: 1px 1px #333 !important; }
 
 .buddy-list-box-sect {
   margin-top: 20%;
