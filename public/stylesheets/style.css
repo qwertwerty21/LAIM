@@ -88,8 +88,10 @@ ul {
   padding: 0;
   margin: 0 2%; }
   .chat-status-row .chat-type-status {
-    min-height: 16px;
-    font-style: italic; }
+    font-style: italic;
+    display: inline-block; }
+  .chat-status-row .color-picker-sect {
+    float: right; }
 
 .message-area {
   margin: 3% 2%; }

@@ -34,6 +34,8 @@ block content
 						ul#chatUl.chat-ul
 					div.chat-status-row
 						div#chatTypeStatus.chat-type-status
+						div.color-picker-sect
+							input#textBGColorPick.text-bg-color-pick(data-text="A", type="text", value="#0000ff")
 					form#messageForm
 						div.form-group.message-area
 							textarea#message.form-control.message-textarea
@@ -68,4 +70,5 @@ block content
 	script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
 	script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
 	script(src="/socket.io/socket.io.js")
+	script(src='/vendor/javascripts/jquery.colorPicker.js')
 	script(src="/javascripts/main.js")

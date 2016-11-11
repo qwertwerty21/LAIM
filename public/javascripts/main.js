@@ -40,6 +40,17 @@ $(document).ready(function() {
 		scroll: false
 	});
 
+	$(".text-bg-color-pick").colorPicker({
+		onColorChange: function( id, newValue ){
+			console.log(id + ' has been changed to ' + newValue);
+			$message.css('background-color', newValue);
+			socket.emit('text bg color change', {
+				bgColor: newValue
+			});
+
+		}
+	});
+
 	getEmoLyrics();
 
 	function setTyper (){
@@ -289,6 +300,9 @@ $(document).ready(function() {
 	socket.on('update typing status', function(screenname){
 		if(screenname){
 			$chatTypeStatus.text( screenname + ' is typing...');
+			setTimeout(function(){
+				$chatTypeStatus.text("   ");
+			}, 1000);
 		}
 		else{
 			$chatTypeStatus.text("   ");
@@ -301,6 +315,8 @@ $(document).ready(function() {
 			"class": "chat-li"
 		});
 
+		$chatListItem.css('background-color', data.textBGColor);
+
 		var $spanUserName = $('<span>', {
 			"class": "username-span"
 		}).text(data.username + ": ");
@@ -308,20 +324,21 @@ $(document).ready(function() {
 		var $spanMsg = $('<span>', {
 			"class": "msg-span"
 		}).text(data.msg);
-
+		console.log('hers the bg color' + data.textBGColor)
 		$chatListItem.append($spanUserName, $spanMsg) 
-		console.log(data.msg);
+		console.log($spanMsg);
 		
 		if( data.username !== $laimUserName.val()){
 			receiveImSFX.play();
 		}
-
+		console.log('hers the background color ' + data.textBGColor);
 		$chatUl.append($chatListItem);
 		$chatUl.scrollTop($chatUl[0].scrollHeight);
 		$message.focus();
 	});
 
 	socket.on('get users', function(data){
+		console.log(data);
 		var html = '';
 		for(var i = 0; i < data.length; i++){
 			html+= '<li class=buddy-li>' + data[i] + '</li>';

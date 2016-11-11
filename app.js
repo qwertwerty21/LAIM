@@ -10,7 +10,8 @@ var users = require('./routes/users');
 
 var app = express();
 
-socketConnections = [];
+socketConnections = {};
+//TO DO DELETE SOCKET USERS MOVE IT ALL TO SOCKET CONNECTIONS
 socketUsers = [];
 //call socket.io to the app
 app.io = require('socket.io')();
@@ -72,44 +73,62 @@ app.use(function(err, req, res, next) {
 
 app.io.on('connection', function(socket){  
 
-  socketConnections.push(socket);
-  console.log('a user connected. total users: %s', socketConnections.length);
+  socketConnections[socket.id] = {
+    "socketInfo": socket,
+    "username": null,
+    "textBgColor": 'transparent'
+  };
+  console.log('sock ' + socket.id + 'socketinfo' + socketConnections[socket.id].socketInfo);
+  console.log('a user connected. total users: ', Object.keys(socketConnections).length);
   //DISCONNECT
   socket.on('disconnect', function(data){
-    app.io.emit('buddy departs', socket.username);
+    app.io.emit('buddy departs', socketConnections[socket.id]['username']);
     
-    if(socketUsers.indexOf(socket.username) !== -1){
-      socketUsers.splice(socketUsers.indexOf(socket.username), 1);
+    if(socketUsers.indexOf(socketConnections[socket.id]['username']) !== -1){
+      socketUsers.splice(socketUsers.indexOf(socketConnections[socket.id]['username']), 1);
     }
     
-    socketConnections.splice( socketConnections.indexOf(socket), 1 )
+    delete socketConnections[socket.id];
     updateUserNames();
     
-    console.log(' a user disconnected. total users %s', socketConnections.length);
+    console.log(' a user disconnected. total users %s', Object.keys(socketConnections).length);
   });
   //SET USERNAME
   socket.on('new username', function(data, callback){
+    console.log(socketConnections[socket.id]);
     callback(true);
-    socket.username = data;
-    socketUsers.push(socket.username);
-    app.io.emit('buddy arrives', socket.username);
+    socketConnections[socket.id]['username']= data;
+    console.log('usename is ' + socketConnections[socket.id].username);
+    socketUsers.push(data);
+    
+    app.io.emit('buddy arrives', socketConnections[socket.id].username);
     updateUserNames();
   });
   //USER IS TYPING 
   socket.on('user typing', function(data){
-    app.io.emit('update typing status', socket.username);
+    app.io.emit('update typing status', socketConnections[socket.id].username);
   });
   //NOONE IS TYPING
   socket.on('noone typing', function(){
     app.io.emit('update typing status');
   });
+  //TEXT COLOR BG CHANGE
+  socket.on('text bg color change', function(data){
+    socketConnections[socket.id].textBgColor = data.bgColor;
+    console.log('ooyoyoyo' +socketConnections[socket.id].textBgColor);
+  });
 
   //SEND MESSAGE
   socket.on('send message', function(data){
-    app.io.emit('new message', {username: socket.username, msg: data.msg} );
+    app.io.emit('new message', {
+      username: socketConnections[socket.id].username, 
+      msg: data.msg,
+      textBGColor: socketConnections[socket.id].textBgColor
+    } );
   });
   
   function updateUserNames(){
+    console.log('socketsuers' + socketUsers)
     app.io.emit('get users', socketUsers);
   }
 });
