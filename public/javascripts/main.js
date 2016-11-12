@@ -291,7 +291,9 @@ $(document).ready(function() {
 		buddyArriveSFX.play();
 		postBuddyArrDpartNotif(screenname, 'joined');
 	});
-
+	socket.on('disconnect', function( ){
+		location.reload();
+	});
 	socket.on('buddy departs', function( screenname ){
 		buddyDepartSFX.play();
 		postBuddyArrDpartNotif(screenname, 'left');
