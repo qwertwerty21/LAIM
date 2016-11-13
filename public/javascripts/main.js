@@ -40,6 +40,11 @@ $(document).ready(function() {
 		scroll: false
 	});
 
+	$('.li-minimize, .li-close').on('click', function(e){
+		e.preventDefault();
+		alert('This button is purely dEc0rAtIv3 \n lol so randum, rite? XD' );
+	});
+
 	$(".text-bg-color-pick").colorPicker({
 		onColorChange: function( id, newValue ){
 			console.log(id + ' has been changed to ' + newValue);
@@ -291,7 +296,13 @@ $(document).ready(function() {
 		buddyArriveSFX.play();
 		postBuddyArrDpartNotif(screenname, 'joined');
 	});
+	socket.on('load old msgs', function(docs){
+		for(var i = 0; i < docs.length; i++){
+			displayMsg(docs[i]);
+		}
+	});
 	socket.on('disconnect', function( ){
+		alert('Oh n0es! You\'ve been disconnected due to inactivity!  \n Try logging in again, yo.');
 		location.reload();
 	});
 	socket.on('buddy departs', function( screenname ){
@@ -312,7 +323,7 @@ $(document).ready(function() {
 		
 	});
 
-	socket.on('new message', function(data){
+	function displayMsg(data){
 		var $chatListItem = $('<li>', {
 			"class": "chat-li"
 		});
@@ -326,16 +337,22 @@ $(document).ready(function() {
 		var $spanMsg = $('<span>', {
 			"class": "msg-span"
 		}).text(data.msg);
-		console.log('hers the bg color' + data.textBGColor)
-		$chatListItem.append($spanUserName, $spanMsg) 
-		console.log($spanMsg);
+
+		$chatListItem.append($spanUserName, $spanMsg);
+		$chatUl.append($chatListItem);
+		$chatUl.scrollTop($chatUl[0].scrollHeight);
+	}
+
+	socket.on('new message', function(data){
+		
+		displayMsg(data);
+	
 		
 		if( data.username !== $laimUserName.val()){
 			receiveImSFX.play();
 		}
-		console.log('hers the background color ' + data.textBGColor);
-		$chatUl.append($chatListItem);
-		$chatUl.scrollTop($chatUl[0].scrollHeight);
+		
+	
 		$message.focus();
 	});
 

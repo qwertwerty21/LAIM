@@ -4,9 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var mongoURL = 'mongodb://sunnylaim:laim@ds151917.mlab.com:51917/laimchatlogdb';
 
 var app = express();
 
@@ -21,6 +22,14 @@ app.io = require('socket.io')();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+mongoose.connect(mongoURL, function(err){
+  if(err){
+    console.log(err);
+  }
+  else{
+    console.log('Connected to mongodb!')
+  }
+});
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -71,6 +80,16 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var chatSchema = mongoose.Schema({
+    socketId: String,
+    username: String,
+    msg: String,
+    textBGColor: String,
+    timeCreated: {type: Date, default: Date.now } 
+});
+
+var ChatModel = mongoose.model('message', chatSchema);
+
 app.io.on('connection', function(socket){  
 
   socketConnections[socket.id] = {
@@ -80,6 +99,14 @@ app.io.on('connection', function(socket){
   };
   console.log('sock ' + socket.id + 'socketinfo' + socketConnections[socket.id].socketInfo);
   console.log('a user connected. total users: ', Object.keys(socketConnections).length);
+  //GET DATA IN MONGODB TO LOAD OLD MSGS
+  ChatModel.find({}, function(err, docs){
+    if(err){
+      throw err;
+    }
+    console.log(docs);
+    socket.emit('load old msgs', docs);
+  });
   //DISCONNECT
   socket.on('disconnect', function(data){
     app.io.emit('buddy departs', socketConnections[socket.id]['username']);
@@ -120,11 +147,22 @@ app.io.on('connection', function(socket){
 
   //SEND MESSAGE
   socket.on('send message', function(data){
+    var newMsg = new ChatModel({
+      socketId: socket.id,
+      username: socketConnections[socket.id].username, 
+      msg: data.msg,
+      textBGColor: socketConnections[socket.id].textBgColor
+    });
+    console.log('new messgajsdfs ' + newMsg)
+    newMsg.save(function(err, mes){
+      if(err) return handleError(err);
+    });
     app.io.emit('new message', {
       username: socketConnections[socket.id].username, 
       msg: data.msg,
       textBGColor: socketConnections[socket.id].textBgColor
     } );
+    
   });
   
   function updateUserNames(){
@@ -134,4 +172,5 @@ app.io.on('connection', function(socket){
 });
 
 module.exports = app;
+
 
